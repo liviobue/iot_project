@@ -1,0 +1,25 @@
+sudo apt-get update
+sudo apt-get full-upgrade
+
+sudo apt install sense-hat 
+sudo reboot
+
+sudo apt install python3-paho-mqtt
+
+# Prüfen ob installiert
+node --version
+npm --version
+
+bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
+
+sudo apt install python3-wget
+
+# start, stop node red
+node-red-start
+node-red-stop
+
+# mosquitto
+sudo apt install mosquitto
+sudo apt install mosquitto-clients
+
+
