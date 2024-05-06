@@ -1,17 +1,34 @@
 # app.py
-
 from flask import Flask, render_template
 from pymongo import MongoClient
 import plotly.graph_objs as go
 from config import MONGO_URI
+import json
+from bson import ObjectId  # Import ObjectId from bson library
+from datetime import datetime
 
 app = Flask(__name__)
 
 # MongoDB connection setup
 client = MongoClient(MONGO_URI)
-db = client['iot_database']
-collection = db['iot_data']
+db = client['IoT-Project']
+collection = db['Raw-Data']
 
+# Function to serialize datetime objects
+def serialize_date(obj):
+    if isinstance(obj, datetime):
+        return obj.strftime('%Y-%m-%d %H:%M:%S')
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+data_from_mongo = collection.find()
+
+# Print each document in JSON format
+for document in data_from_mongo:
+    # Convert ObjectId to string
+    document['_id'] = str(document['_id'])
+    print(json.dumps(document, indent=4, default=serialize_date))
+
+""" 
 @app.route('/')
 def index():
     # Fetch data from MongoDB
@@ -37,3 +54,4 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+ """
