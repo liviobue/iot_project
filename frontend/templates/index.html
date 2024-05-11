@@ -1,5 +1,3 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +12,25 @@
     <script>
         // Load the graph JSON data passed from Flask
         var graphJSON = {{ graph_json|safe }};
-
-        // Display the graph using Plotly
+        
         Plotly.newPlot('graph', graphJSON.data, graphJSON.layout);
+
+        function fetchDataAndUpdateGraph() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Extract data for plotting
+                    var timestamps = data.map(entry => entry.timestamp);
+                    var sensorValues = data.map(entry => entry.sensor_value);
+
+                    // Update the graph
+                    Plotly.restyle('graph', 'x', [timestamps]);
+                    Plotly.restyle('graph', 'y', [sensorValues]);
+                });
+        }
+
+        // Fetch data and update graph every 5 seconds
+        setInterval(fetchDataAndUpdateGraph, 5000);
     </script>
 </body>
 </html>

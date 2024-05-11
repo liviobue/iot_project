@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from pymongo import MongoClient
 import plotly.graph_objs as go
 from config import MONGO_URI
@@ -34,6 +34,21 @@ def index():
     graph_json = figure.to_json()
 
     return render_template('index.html', graph_json=graph_json)
+
+@app.route('/data')
+def get_data():
+    # Fetch data from MongoDB
+    data_from_mongo = collection.find()
+
+    # Convert MongoDB data to JSON
+    data = []
+    for doc in data_from_mongo:
+        data.append({
+            'timestamp': doc['timestamp'],
+            'sensor_value': doc['sensor_value']
+        })
+
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
