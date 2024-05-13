@@ -1,0 +1,403 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a9d9d9d9.d9d9d9",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "parse data",
+        "func": "var data = {\n    series: ['NH3', 'CO', 'O2'],\n    data: []\n};\n\nmsg.payload.forEach(function(doc) {\n    var row = [\n        doc.NH3.avg,\n        doc.CO.avg,\n        doc.O2.avg\n    ];\n    data.data.push(row);\n});\n\nmsg.payload = data;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "b9d9d9d9.d9d9d9"
+            ]
+        ]
+    },
+    {
+        "id": "b9d9d9d9.d9d9d9",
+        "type": "ui_chart",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Test",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "100",
+        "ymax": "200",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 720,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b311c6bd873ac012",
+        "type": "mongodb in",
+        "z": "f6f2187d.f17ca8",
+        "mongodb": "d6c8a7a8.9f9f58",
+        "name": "",
+        "collection": "Raw-Data",
+        "operation": "find",
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "4f688aeb5b50f58e",
+                "dafac3e422d8e493",
+                "9cf27abced7e7933"
+            ]
+        ]
+    },
+    {
+        "id": "184a8a3fdd6027eb",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "jsonata",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4f688aeb5b50f58e",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "parse data nh3",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.NH3.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 420,
+        "wires": [
+            [
+                "769aee2758e10ef5",
+                "184a8a3fdd6027eb"
+            ]
+        ]
+    },
+    {
+        "id": "c75358cc04f0ba6e",
+        "type": "ui_chart",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "Combined Chart",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Test 2",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "769aee2758e10ef5",
+        "type": "ui_chart",
+        "z": "f6f2187d.f17ca8",
+        "name": "NH3 Chart",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "NH3 Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1ab6b86105842c96",
+        "type": "ui_chart",
+        "z": "f6f2187d.f17ca8",
+        "name": "CO Chart",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "CO Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "44277c4fcc4935c9",
+        "type": "ui_chart",
+        "z": "f6f2187d.f17ca8",
+        "name": "O2 Chart",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "O2 Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "36fcee99bdf1ab55",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Inject",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "b311c6bd873ac012"
+            ]
+        ]
+    },
+    {
+        "id": "dafac3e422d8e493",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "parse data co",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.CO.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 480,
+        "wires": [
+            [
+                "1ab6b86105842c96"
+            ]
+        ]
+    },
+    {
+        "id": "9cf27abced7e7933",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "parse data O2",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.O2.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 540,
+        "wires": [
+            [
+                "44277c4fcc4935c9"
+            ]
+        ]
+    },
+    {
+        "id": "d9d9d9d9.d9d9d9",
+        "type": "ui_group",
+        "name": "Data Visualization",
+        "tab": "839e21bb.a6da1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d6c8a7a8.9f9f58",
+        "type": "mongodb",
+        "z": "f6f2187d.f17ca8",
+        "hostname": "zhaw.wqz6tdw.mongodb.net",
+        "topology": "dnscluster",
+        "connectOptions": "",
+        "port": "27017",
+        "db": "IoT-Project",
+        "name": "mongodb"
+    },
+    {
+        "id": "839e21bb.a6da1",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
