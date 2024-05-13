@@ -1,0 +1,108 @@
+[
+    {
+        "id": "d6c8a7a8.9f9f58",
+        "type": "mongodb",
+        "z": "7a8d9d1d.c9c8f8",
+        "hostname": "127.0.0.1",
+        "port": "27017",
+        "db": "your_database_name",
+        "name": "mongodb"
+    },
+    {
+        "id": "f9d7c9c6.d9c9e8",
+        "type": "mongodb",
+        "z": "7a8d9d1d.c9c8f8",
+        "hostname": "127.0.0.1",
+        "port": "27017",
+        "db": "your_database_name",
+        "operation": "find",
+        "outputType": "single",
+        "query": "{}",
+        "projection": "",
+        "sort": "",
+        "limit": "",
+        "skip": "",
+        "service": "d6c8a7a8.9f9f58",
+        "name": "mongodb query",
+        "wires": [
+            [
+                "a9d9d9d9.d9d9d9"
+            ]
+        ]
+    },
+    {
+        "id": "a9d9d9d9.d9d9d9",
+        "type": "function",
+        "z": "7a8d9d1d.c9c8f8",
+        "name": "parse data",
+        "func": "var data = {\n    series: ['NH3', 'CO', 'O2'],\n    data: []\n};\n\nmsg.payload.forEach(function(doc) {\n    var row = [\n        doc.NH3.avg,\n        doc.CO.avg,\n        doc.O2.avg\n    ];\n    data.data.push(row);\n});\n\nmsg.payload = data;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 160,
+        "wires": [
+            [
+                "b9d9d9d9.d9d9d9"
+            ]
+        ]
+    },
+    {
+        "id": "b9d9d9d9.d9d9d9",
+        "type": "ui_chart",
+        "z": "7a8d9d1d.c9c8f8",
+        "name": "",
+        "group": "d9d9d9d9.d9d9d9",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUnitedConfColors": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 670,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d9d9d9d9.d9d9d9",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "d9d9d9d9.d9d9d9",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d9d9d9d9.d9d9d9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
