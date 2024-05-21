@@ -1,15 +1,15 @@
 [
     {
-        "id": "f6f2187d.f17ca8",
+        "id": "c0e8215a7b09c47e",
         "type": "tab",
         "label": "Flow 1",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "a9d9d9d9.d9d9d9",
+        "id": "bcca8d3d8124fe82",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "parse data",
         "func": "var data = {\n    series: ['NH3', 'CO', 'O2'],\n    data: []\n};\n\nmsg.payload.forEach(function(doc) {\n    var row = [\n        doc.NH3.avg,\n        doc.CO.avg,\n        doc.O2.avg\n    ];\n    data.data.push(row);\n});\n\nmsg.payload = data;\nreturn msg;",
         "outputs": 1,
@@ -22,18 +22,18 @@
         "y": 260,
         "wires": [
             [
-                "b9d9d9d9.d9d9d9"
+                "36f2b9599bc0a44e"
             ]
         ]
     },
     {
-        "id": "b9d9d9d9.d9d9d9",
+        "id": "36f2b9599bc0a44e",
         "type": "ui_chart",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "d": true,
         "name": "",
-        "group": "d9d9d9d9.d9d9d9",
-        "order": 2,
+        "group": "a7faf3b35ab36b3b",
+        "order": 1,
         "width": 0,
         "height": 0,
         "label": "Test",
@@ -72,27 +72,27 @@
         ]
     },
     {
-        "id": "b311c6bd873ac012",
+        "id": "3cc71e65b3ef9d14",
         "type": "mongodb in",
-        "z": "f6f2187d.f17ca8",
-        "mongodb": "d6c8a7a8.9f9f58",
-        "name": "",
+        "z": "c0e8215a7b09c47e",
+        "mongodb": "fc9de12b765ed790",
+        "name": "Access Data",
         "collection": "Raw-Data",
         "operation": "find",
-        "x": 240,
+        "x": 210,
         "y": 260,
         "wires": [
             [
-                "4f688aeb5b50f58e",
-                "dafac3e422d8e493",
-                "9cf27abced7e7933"
+                "11654675dacb69da",
+                "3a011b7a8b833459",
+                "ec6a58c06a9bc2b5"
             ]
         ]
     },
     {
-        "id": "184a8a3fdd6027eb",
+        "id": "7ae44c6ffe9807ef",
         "type": "debug",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "debug 1",
         "active": true,
         "tosidebar": true,
@@ -107,9 +107,9 @@
         "wires": []
     },
     {
-        "id": "4f688aeb5b50f58e",
+        "id": "11654675dacb69da",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "parse data nh3",
         "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.NH3.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
         "outputs": 1,
@@ -122,19 +122,20 @@
         "y": 420,
         "wires": [
             [
-                "769aee2758e10ef5",
-                "184a8a3fdd6027eb"
+                "dafc6058fd0f3879",
+                "7ae44c6ffe9807ef",
+                "c3c6df75cf97ba6b"
             ]
         ]
     },
     {
-        "id": "c75358cc04f0ba6e",
+        "id": "42f97f07fc03e335",
         "type": "ui_chart",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "d": true,
         "name": "Combined Chart",
-        "group": "d9d9d9d9.d9d9d9",
-        "order": 0,
+        "group": "a7faf3b35ab36b3b",
+        "order": 4,
         "width": 0,
         "height": 0,
         "label": "Test 2",
@@ -173,12 +174,12 @@
         ]
     },
     {
-        "id": "769aee2758e10ef5",
+        "id": "dafc6058fd0f3879",
         "type": "ui_chart",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "NH3 Chart",
-        "group": "d9d9d9d9.d9d9d9",
-        "order": 1,
+        "group": "92b7cf35f1e219e5",
+        "order": 2,
         "width": 0,
         "height": 0,
         "label": "NH3 Chart",
@@ -217,12 +218,12 @@
         ]
     },
     {
-        "id": "1ab6b86105842c96",
+        "id": "598944e77340c0dc",
         "type": "ui_chart",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "CO Chart",
-        "group": "d9d9d9d9.d9d9d9",
-        "order": 2,
+        "group": "a7faf3b35ab36b3b",
+        "order": 3,
         "width": 0,
         "height": 0,
         "label": "CO Chart",
@@ -254,19 +255,19 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 710,
-        "y": 480,
+        "x": 720,
+        "y": 520,
         "wires": [
             []
         ]
     },
     {
-        "id": "44277c4fcc4935c9",
+        "id": "aa34ae703dce7661",
         "type": "ui_chart",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "O2 Chart",
-        "group": "d9d9d9d9.d9d9d9",
-        "order": 3,
+        "group": "0eb95b8c5961010a",
+        "order": 2,
         "width": 0,
         "height": 0,
         "label": "O2 Chart",
@@ -298,16 +299,16 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 710,
-        "y": 540,
+        "x": 720,
+        "y": 620,
         "wires": [
             []
         ]
     },
     {
-        "id": "36fcee99bdf1ab55",
+        "id": "07156981581cd3a4",
         "type": "inject",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "Inject",
         "props": [
             {
@@ -325,14 +326,14 @@
         "y": 140,
         "wires": [
             [
-                "b311c6bd873ac012"
+                "3cc71e65b3ef9d14"
             ]
         ]
     },
     {
-        "id": "dafac3e422d8e493",
+        "id": "3a011b7a8b833459",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "parse data co",
         "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.CO.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
         "outputs": 1,
@@ -342,17 +343,18 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
-                "1ab6b86105842c96"
+                "598944e77340c0dc",
+                "e03713d1ccdfeb11"
             ]
         ]
     },
     {
-        "id": "9cf27abced7e7933",
+        "id": "ec6a58c06a9bc2b5",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "name": "parse data O2",
         "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = lastDoc.O2.avg;\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
         "outputs": 1,
@@ -362,28 +364,144 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 540,
+        "y": 620,
         "wires": [
             [
-                "44277c4fcc4935c9"
+                "aa34ae703dce7661",
+                "a503c0a875605229"
             ]
         ]
     },
     {
-        "id": "d9d9d9d9.d9d9d9",
-        "type": "ui_group",
-        "name": "Data Visualization",
-        "tab": "839e21bb.a6da1",
+        "id": "a503c0a875605229",
+        "type": "ui_gauge",
+        "z": "c0e8215a7b09c47e",
+        "name": "O2 Value",
+        "group": "0eb95b8c5961010a",
         "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "O2 Value",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "200",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "20",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 720,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "e03713d1ccdfeb11",
+        "type": "ui_gauge",
+        "z": "c0e8215a7b09c47e",
+        "name": "",
+        "group": "a7faf3b35ab36b3b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "CO Value",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "300",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "100",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 720,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c3c6df75cf97ba6b",
+        "type": "ui_gauge",
+        "z": "c0e8215a7b09c47e",
+        "name": "",
+        "group": "92b7cf35f1e219e5",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "NH3 Value",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "400",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "50",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 710,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "48d1ee29620ee872",
+        "type": "ui_text",
+        "z": "c0e8215a7b09c47e",
+        "group": "e267505017fd8305",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Welcome to our Sensor's Dashboard. Within our IoT Project we have created a PyCar equipped with Sensors that measure NH3 (Ammonia), O2 (Oxygen), and CO (Carbon Monoxide).",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": "21",
+        "color": "#000000",
+        "x": 880,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "bf3973aeffc69474",
+        "type": "ui_spacer",
+        "z": "c0e8215a7b09c47e",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 1,
+        "width": 7,
+        "height": 1
+    },
+    {
+        "id": "a7faf3b35ab36b3b",
+        "type": "ui_group",
+        "name": "CO",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 2,
         "disp": true,
-        "width": "6",
+        "width": 6,
         "collapse": false,
         "className": ""
     },
     {
-        "id": "d6c8a7a8.9f9f58",
+        "id": "fc9de12b765ed790",
         "type": "mongodb",
-        "z": "f6f2187d.f17ca8",
+        "z": "c0e8215a7b09c47e",
         "hostname": "zhaw.wqz6tdw.mongodb.net",
         "topology": "dnscluster",
         "connectOptions": "",
@@ -392,12 +510,46 @@
         "name": "mongodb"
     },
     {
-        "id": "839e21bb.a6da1",
+        "id": "92b7cf35f1e219e5",
+        "type": "ui_group",
+        "name": "NH3",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0eb95b8c5961010a",
+        "type": "ui_group",
+        "name": "O2",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e267505017fd8305",
+        "type": "ui_group",
+        "name": "Welcome!",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 1,
+        "disp": true,
+        "width": 7,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e20c06f70fcdb8d8",
         "type": "ui_tab",
-        "name": "Dashboard",
+        "name": "Sensor's Dashboard",
         "icon": "dashboard",
         "order": 1,
         "disabled": false,
-        "hidden": false
+        "hidden": false,
+        "info": "# Hello and welcome"
     }
 ]
