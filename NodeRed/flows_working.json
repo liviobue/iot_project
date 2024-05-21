@@ -2,7 +2,7 @@
     {
         "id": "fea15aab4a789ebf",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Dashboard",
         "disabled": false,
         "info": ""
     },
@@ -355,7 +355,7 @@
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "Welcome to our Sensor's Dashboard.",
+        "label": "Welcome to our Project.",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
@@ -363,7 +363,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 210,
+        "x": 170,
         "y": 60,
         "wires": []
     },
@@ -376,7 +376,7 @@
         "width": 0,
         "height": 0,
         "name": "",
-        "label": "Within our IoT Project we have created a PyCar equipped with Sensors that measure NH3 (Ammonia), O2 (Oxygen), and CO (Carbon Monoxide).",
+        "label": "Within our IoT Project we have created a PyCar equipped with Sensors that measure the ppm of Ammonia, Oxygen, and Carbon Monoxide. ",
         "format": "{{msg.payload}}",
         "layout": "row-spread",
         "className": "",
@@ -384,7 +384,7 @@
         "font": "",
         "fontSize": 16,
         "color": "#000000",
-        "x": 540,
+        "x": 530,
         "y": 100,
         "wires": []
     },
@@ -393,7 +393,7 @@
         "type": "ui_text",
         "z": "fea15aab4a789ebf",
         "group": "e267505017fd8305",
-        "order": 9,
+        "order": 10,
         "width": 0,
         "height": 0,
         "name": "",
@@ -410,7 +410,28 @@
         "wires": []
     },
     {
-        "id": "dd14cb15a8657582",
+        "id": "75b6d982bcb48b67",
+        "type": "ui_template",
+        "z": "fea15aab4a789ebf",
+        "group": "e267505017fd8305",
+        "name": "",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    /* General background and text colors */\n    body.nr-dashboard-theme md-content.md-default-theme,\n    body.nr-dashboard-theme {\n        background-color: #f8f9fa !important;\n        color: #212529 !important;\n    }\n\n    /* Navbar customization */\n    .nr-dashboard-theme .nr-dashboard-header,\n    .nr-dashboard-theme .nr-dashboard-footer {\n        background-color: #007bff !important; /* Blue color */\n        color: #ffffff !important;\n    }\n\n    /* Remove all margins and padding between grid items */\n    .nr-dashboard-theme .nr-dashboard-widget-grid,\n    .nr-dashboard-theme .nr-dashboard-widget {\n        margin: 0 !important;\n        padding: 0 !important;\n    }\n\n    /* Input fields customization */\n    .nr-dashboard-theme md-input-container.md-default-theme .md-input {\n        color: #212529 !important;\n    }\n\n    /* Button customization */\n    .nr-dashboard-theme md-button.md-default-theme {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n        border-radius: 5px;\n        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n    }\n\n    /* Chart background and text customization */\n    .nr-dashboard-theme .nr-dashboard-chart canvas {\n        background-color: #ffffff !important;\n    }\n\n    .nr-dashboard-theme .nr-dashboard-chart .x.axis text,\n    .nr-dashboard-theme .nr-dashboard-chart .y.axis text {\n        fill: #212529 !important;\n    }\n\n    /* Grid and axis customization */\n    .nr-dashboard-theme .nr-dashboard-chart .grid .tick line {\n        stroke: #e9ecef !important;\n    }\n\n    .nr-dashboard-theme .nr-dashboard-chart .axis path,\n    .nr-dashboard-theme .nr-dashboard-chart .axis line {\n        stroke: #212529 !important;\n    }\n\n    /* Chart outer area background */\n    .nr-dashboard-theme .nr-dashboard-chart .chart-outer {\n        background-color: #f8f9fa !important;\n    }\n\n    /* Chart text color */\n    .nr-dashboard-theme .nr-dashboard-chart text {\n        fill: #212529 !important;\n    }\n\n    /* Dashboard group titles */\n    .nr-dashboard-theme .nr-dashboard-group-title {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n        border-radius: 5px;\n        padding: 5px 10px;\n    }\n\n    /* Tooltip customization */\n    .nr-dashboard-theme .nr-dashboard-tooltip {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n    }\n</style>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "added to site",
+        "x": 120,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "19f77784bd4ed9d0",
         "type": "ui_spacer",
         "z": "fea15aab4a789ebf",
         "name": "spacer",
@@ -420,7 +441,7 @@
         "height": 1
     },
     {
-        "id": "94c17eb2e59e1f87",
+        "id": "911b36a812476703",
         "type": "ui_spacer",
         "z": "fea15aab4a789ebf",
         "name": "spacer",
@@ -430,7 +451,7 @@
         "height": 1
     },
     {
-        "id": "a98fe9f75ea8209d",
+        "id": "422adb3be58c16b4",
         "type": "ui_spacer",
         "z": "fea15aab4a789ebf",
         "name": "spacer",
@@ -440,7 +461,7 @@
         "height": 1
     },
     {
-        "id": "7974b03bcec4716a",
+        "id": "63399d979a22e0a1",
         "type": "ui_spacer",
         "z": "fea15aab4a789ebf",
         "name": "spacer",
@@ -450,22 +471,22 @@
         "height": 1
     },
     {
-        "id": "37923fb71872f431",
-        "type": "ui_spacer",
-        "z": "fea15aab4a789ebf",
-        "name": "spacer",
-        "group": "e267505017fd8305",
-        "order": 7,
-        "width": 6,
-        "height": 1
-    },
-    {
-        "id": "0655878cb780f9aa",
+        "id": "c77db31c5c688504",
         "type": "ui_spacer",
         "z": "fea15aab4a789ebf",
         "name": "spacer",
         "group": "e267505017fd8305",
         "order": 8,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "befdce8faf80c50a",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 9,
         "width": 6,
         "height": 1
     },
@@ -483,33 +504,33 @@
     {
         "id": "92b7cf35f1e219e5",
         "type": "ui_group",
-        "name": "NH3",
+        "name": "Ammonia (NH3)",
         "tab": "e20c06f70fcdb8d8",
         "order": 4,
         "disp": true,
-        "width": 7,
+        "width": "7",
         "collapse": false,
         "className": ""
     },
     {
         "id": "a7faf3b35ab36b3b",
         "type": "ui_group",
-        "name": "CO",
+        "name": "Carbon Monoxide (CO)",
         "tab": "e20c06f70fcdb8d8",
         "order": 2,
         "disp": true,
-        "width": 7,
+        "width": "7",
         "collapse": false,
         "className": ""
     },
     {
         "id": "0eb95b8c5961010a",
         "type": "ui_group",
-        "name": "O2",
+        "name": "Oxygen (O2)",
         "tab": "e20c06f70fcdb8d8",
         "order": 3,
         "disp": true,
-        "width": 7,
+        "width": "7",
         "collapse": false,
         "className": ""
     },
@@ -527,7 +548,7 @@
     {
         "id": "e20c06f70fcdb8d8",
         "type": "ui_tab",
-        "name": "Sensor's Dashboard",
+        "name": "IoT - Sensor's Dashboard ",
         "icon": "dashboard",
         "order": 1,
         "disabled": false,
