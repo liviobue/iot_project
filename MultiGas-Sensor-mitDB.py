@@ -1,3 +1,4 @@
+import asyncio
 import os
 import datetime
 import enum
@@ -9,18 +10,13 @@ import binascii
 import typing
 
 import dotenv
-import smbus
+
 import pymongo
 import trio
-import bokeh.io
-import bokeh.plotting
-import bokeh.models
-import bokeh as bk
 import numpy as np
-import RPi.GPIO as GPIO
-import httpx
 
-%autoawait trio
+import RPi.GPIO as GPIO
+import smbus
 
 
 i2cbus          = 1
@@ -35,56 +31,18 @@ co_led_red      = 24
 o2_led_red      = 25
 led_green       = 12
 
+
 nh3_alert       = False
 co_alert        = False
 o2_alert        = False
 
-NH3             = MultiGasSensor(i2cbus, NH3_ADDRESS, SensorType.NH3)
-CO              = MultiGasSensor(i2cbus, CO_ADDRESS, SensorType.CO)
-O2              = MultiGasSensor(i2cbus, O2_ADDRESS, SensorType.O2)
-
-
-
-def connect_to_db():
-    """Open the connection to the DB and return the collection
-    Create collection with unique index, if there is not yet one"""
-    # Load environment variables from .env file
     
-    dotenv.load_dotenv()
-    
-    # Get MongoDB-URI
-    mongodb_uri = os.getenv("MONGODB_URI")
-    DBclient = pymongo.MongoClient(mongodb_uri)
-    db = DBclient["IoT-Project"]
-
-    return db["Raw-Data"]
-
-
-def represent_for_mongodb(obj):
-    match obj:
-        case dict():
-            return {represent_for_mongodb(k):represent_for_mongodb(v) for k,v in obj.items()}
-        case tuple() | list():
-            return type(obj)(represent_for_mongodb(v) for v in obj)
-        case np.generic():
-            return obj.item()
-        case _:
-            return obj
-
-
-def insert_data_to_db(data):
-    collection = connect_to_db()
-    collection.insert_one(
-        represent_for_mongodb(data)
-    )
-
-
 class CmdCode(enum.Enum):
     read_concentration = 0x86
     read_temp = 0x87
     read_all = 0x88
-
-
+    
+     
 class SensorType(enum.Enum):
     O2         =  0x05
     CO         =  0x04
@@ -98,15 +56,15 @@ class SensorType(enum.Enum):
     SO2        =  0X2B
     HF         =  0x33
     PH3        =  0x45
-
-
+    
+    
 @dataclasses.dataclass
 class SensorData:
     gas_concentration: float  # ppm
     sensor_type: SensorType
     temperature: float        # degree Celsius
-
-
+    
+    
 class MultiGasSensor:
     """
     Class for all Gas-Sensors
@@ -166,6 +124,41 @@ class MultiGasSensor:
         )
 
 
+def connect_to_db():
+    """Open the connection to the DB and return the collection
+    Create collection with unique index, if there is not yet one"""
+    
+    # Load environment variables from .env file
+    dotenv.load_dotenv()
+    
+    # Get MongoDB-URI
+    mongodb_uri = os.getenv("MONGODB_URI")
+    DBclient = pymongo.MongoClient(mongodb_uri)
+    db = DBclient["IoT-Project"]
+
+    return db["Raw-Data"]
+
+
+def represent_for_mongodb(obj):
+    match obj:
+        case dict():
+            return {represent_for_mongodb(k):represent_for_mongodb(v) for k,v in obj.items()}
+        case tuple() | list():
+            return type(obj)(represent_for_mongodb(v) for v in obj)
+        case np.generic():
+            return obj.item()
+        case _:
+            return obj
+        
+
+def insert_data_to_db(data):
+    collection = connect_to_db()
+    collection.insert_one(
+        represent_for_mongodb(data)
+    )
+
+
+
 def setup():
     GPIO.setmode(GPIO.BCM) # use LOGICAL GPIO Numbering
 
@@ -190,8 +183,10 @@ def setup():
 
     # Button
     GPIO.setup(buttonpin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set buttonPin to PULL UP INPUT mode
-
-
+    
+    
+    
+    
 async def wait_for_alert_end(max_wait_time, previous_button_state) -> tuple[typing.Literal["timeout", "button pressed", "no more alert"], bool]:
     
     with trio.move_on_after(max_wait_time): # Runs until max_wait_time is over
@@ -207,6 +202,8 @@ async def wait_for_alert_end(max_wait_time, previous_button_state) -> tuple[typi
             await trio.sleep(0.05)
     
     return "timeout", previous_button_state
+
+
 
 
 async def alert():
@@ -273,8 +270,9 @@ async def alert():
 
                 previous_button_state = current_button_state
                 await trio.sleep(0.1)
-
-
+                
+                
+                
 def normal_mode():
     """
     Mode without alert
@@ -284,9 +282,9 @@ def normal_mode():
     GPIO.output(co_led_red, GPIO.LOW)
     GPIO.output(o2_led_red, GPIO.LOW)
     GPIO.output(buzzerpin, GPIO.LOW)
-
-
-
+    
+    
+    
 def aggregate_data(alldata):
     data = np.array([data for time, data in alldata])
 
@@ -303,7 +301,8 @@ def aggregate_data(alldata):
     return aggregation
 
 
-async def measurement(*,measurement_interval=0.1, aggregation_interval=10):
+
+async def measurement(NH3, CO, O2, *,measurement_interval=0.1, aggregation_interval=10):
     
     global nh3_alert
     global co_alert
@@ -313,7 +312,6 @@ async def measurement(*,measurement_interval=0.1, aggregation_interval=10):
     co_alert_level = 100 # Normally above 100PPM
     o2_alert_level = 20 # Normally below 17%
 
-    
     next_measurement = trio.current_time()+measurement_interval
     next_aggregation = trio.current_time()+aggregation_interval
 
@@ -367,14 +365,23 @@ async def measurement(*,measurement_interval=0.1, aggregation_interval=10):
         print(aggregation)
 
 
-def main():
-    setup()
+ 
+
+async def main():
     
+    NH3 = MultiGasSensor(i2cbus, NH3_ADDRESS, SensorType.NH3)
+    CO  = MultiGasSensor(i2cbus, CO_ADDRESS, SensorType.CO)
+    O2  = MultiGasSensor(i2cbus, O2_ADDRESS, SensorType.O2)
+    
+    setup()
+
     try: 
         async with trio.open_nursery() as nursery:
             nursery.start_soon(alert)
-            nursery.start_soon(measurement)
+            nursery.start_soon(measurement(NH3, CO, O2))
     finally:
         GPIO.cleanup()
-
-
+        
+        
+if __name__ == "__main__":
+    asyncio.run(main())   
