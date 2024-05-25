@@ -4,6 +4,7 @@ import os
 
 import trio
 import anyio
+import numpy as np
 
 from .multigas_sensors import MultiGasSensor, SensorType
 from .alert_handling import AlertManager
@@ -39,6 +40,23 @@ class MonitoringSystem:
     def __exit__(self, type, value, tb):
         return self.alert_manager.__exit__(type, value, tb)
 
+
+    def aggregate_data(self, alldata:list[tuple[float, float]]) -> dict[str,float]:
+        data = np.array([data for time, data in alldata])
+
+        min = data.min()
+        max = data.max()
+        avg = data.mean()
+
+        aggregation = dict(
+            min=min,
+            max=max,
+            avg=avg,
+        )
+    
+        return aggregation
+
+
     async def measurement_loop(self):
 
         next_measurement = trio.current_time() + self.measurement_interval
@@ -61,7 +79,7 @@ class MonitoringSystem:
                         continue
             
                     for k, v in data.items():
-                        all_data[k].append(v)
+                        all_data[k].append((time, v))
 
 
                     self.alert_manager.check_alerts(
@@ -81,6 +99,8 @@ class MonitoringSystem:
                 collection.insert_one(represent_for_mongodb(aggregation))
                 
                 print(aggregation)
+
+
                 
                 
 async def main():

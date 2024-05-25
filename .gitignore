@@ -1,6 +1,7 @@
 __pycache__/
 config.py
-.venv
+.venv/
+.env
 
 .ipynb_checkpoints
 .DS_Store
