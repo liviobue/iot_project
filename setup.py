@@ -15,6 +15,7 @@ setup(
         "numpy",
         "trio",
         "dotenv",
+        "websockets",
     ],
     extras_require={
         "notebook": [

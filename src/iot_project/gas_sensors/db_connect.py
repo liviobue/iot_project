@@ -27,4 +27,3 @@ def represent_for_mongodb(obj):
             return obj.item()
         case _:
             return obj
-

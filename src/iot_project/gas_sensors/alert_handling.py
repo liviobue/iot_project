@@ -3,14 +3,15 @@ import typing
 import anyio
 import RPi.GPIO as GPIO
 
-nh3_sensor      = 19
-co_sensor       = 23
-o2_sensor       = 32
-other_sensor    = 21
+nh3_sensor = 19
+co_sensor = 23
+o2_sensor = 32
+other_sensor = 21
 
-led_green       = 31
-buzzerpin       = 38
-switch          = 29
+led_green = 31
+buzzerpin = 38
+switch = 29
+
 
 class AlertManager:
 
@@ -18,13 +19,15 @@ class AlertManager:
         self._nh3_alert = False
         self._co_alert = False
         self._o2_alert = False
-        self.nh3_alert_level = 50 # Health risk NH3 above 50 PPM for a 8-Hour-Shift
-        self.co_alert_level = 100 # Health risk CO above 100PPM
-        self.o2_alert_level = 20 # Health risk O2 below 17%
+        self.nh3_alert_level = 50  # Health risk NH3 above 50 PPM for a 8-Hour-Shift
+        self.co_alert_level = 100  # Health risk CO above 100PPM
+        self.o2_alert_level = 20  # Health risk O2 below 17%
 
 
     def _setup(self):
-        GPIO.setmode(GPIO.BOARD) # use BOARD PIN Numbering  # use LOGICAL GPIO Numbering
+        GPIO.setmode(
+            GPIO.BOARD
+        )  # use BOARD PIN Numbering  # use LOGICAL GPIO Numbering
 
         # Green LED
         GPIO.setup(led_green, GPIO.OUT)
@@ -50,20 +53,20 @@ class AlertManager:
             switch, GPIO.IN, pull_up_down=GPIO.PUD_UP
         )  # set buttonPin to PULL UP INPUT mode
 
-    
+
     def __enter__(self):
         self._setup()
 
-    
+
     def __exit__(self, type, value, tb):
         GPIO.cleanup()
 
-    
+
     def check_alerts(self, *, ammonia, carbon_monoxide, oxygen):
         # Check if alerts are True
-        self._nh3_alert = ammonia>self.nh3_alert_level
-        self._co_alert = carbon_monoxide>self.co_alert_level
-        self._o2_alert = oxygen<self.o2_alert_level
+        self._nh3_alert = ammonia > self.nh3_alert_level
+        self._co_alert = carbon_monoxide > self.co_alert_level
+        self._o2_alert = oxygen < self.o2_alert_level
 
 
     async def wait_for_alert_end(
@@ -89,7 +92,7 @@ class AlertManager:
     def _any_alert(self):
         return self._nh3_alert or self._co_alert or self._o2_alert
 
-    
+
     async def alert_loop(self):
         """
         Check if an alert is present or not

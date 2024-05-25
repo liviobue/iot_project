@@ -1,37 +1,44 @@
-import asyncio
-import websockets
 import json
 import time
+import asyncio
 import threading
 
-class SunFounderController():
+import websockets
+
+
+class SunFounderController:
+    """
+    Class for all Sunfounder Controller
+    Copied from https://github.com/sunfounder/sunfounder-controller/blob/master/sunfounder_controller/sunfounder_controller.py
+    """
+
     PORT = 8765
 
     send_dict = {
-        'Name': '',
-        'Type': None,
-        'Check': 'SunFounder Controller',
-        }
+        "Name": "",
+        "Type": None,
+        "Check": "SunFounder Controller",
+    }
 
     recv_dict = {
-        'A': None,
-        'B': None,
-        'C': None,
-        'D': None,
-        'E': None,
-        'F': None,
-        'G': None,
-        'H': None,
-        'I': None,
-        'J': None,
-        'K': None,
-        'L': None,
-        'M': None,
-        'N': None,
-        'O': None,
-        'P': None,
-        'Q': None,
-        'Heart':None
+        "A": None,
+        "B": None,
+        "C": None,
+        "D": None,
+        "E": None,
+        "F": None,
+        "G": None,
+        "H": None,
+        "I": None,
+        "J": None,
+        "K": None,
+        "L": None,
+        "M": None,
+        "N": None,
+        "O": None,
+        "P": None,
+        "Q": None,
+        "Heart": None,
     }
 
 
@@ -43,9 +50,11 @@ class SunFounderController():
         self.client = {}
         self.is_received = False
 
+
     def start(self):
         self.work_flag = True
         self.server_thread.start()
+
 
     def close(self):
         self.server.close()
@@ -55,24 +64,27 @@ class SunFounderController():
         # self.server_thread.join()
         while len(self.client):
             time.sleep(0.01)
-        print('close done')
+        print("close done")
+
 
     def work(self):
         asyncio.run(self.main())
 
+
     async def main(self):
         self.server = await websockets.serve(self.handler, "0.0.0.0", self.port)
-        print(f'websocket server start at port {self.port}')
+        print(f"websocket server start at port {self.port}")
         async with self.server:
-            await asyncio.Future() # run forever
-        print('server closed')
+            await asyncio.Future()  # run forever
+        print("server closed")
+
 
     async def handler(self, websocket):
         _client_num = self.client_num
         _client_ip = websocket.remote_address[0]
-        self.client_num  += 1
+        self.client_num += 1
         self.client[str(_client_num)] = _client_ip
-        print(f'client {_client_num, _client_ip} conneted')
+        print(f"client {_client_num, _client_ip} conneted")
         # print(websocket.remote_address)
 
         while self.work_flag:
@@ -113,38 +125,44 @@ class SunFounderController():
 
             except websockets.exceptions.ConnectionClosed as ex:
                 # disconneted flag
-                print(f'{_client_num}: {ex!r}')
-                print(f'client {_client_num, _client_ip} disconneted')
+                print(f"{_client_num}: {ex!r}")
+                print(f"client {_client_num, _client_ip} disconneted")
                 break
 
         self.client.pop(str(_client_num))
         self.is_closed = True
 
+
     def data_processing(self):
-        if self.recv_dict['Heart'] == 'ping':
-            self.send_dict['Heart'] = 'pong'
+        if self.recv_dict["Heart"] == "ping":
+            self.send_dict["Heart"] = "pong"
+
 
     def start_work(self):
-        print('Start!')
+        print("Start!")
         self.loop.run_forever()
 
 
-    def get(self,key='A', default=None):
+    def get(self, key="A", default=None):
         # if not isinstance(self.recv_dict, dict):
         #     raise ValueError("recv_dict type error. type '%s', value: '%s'" % (type(self.recv_dict), self.recv_dict))
         return self.recv_dict.get(key, default)
 
+
     def getall(self):
         return self.recv_dict
 
-    def set(self,key='A_region', value=None):
+
+    def set(self, key="A_region", value=None):
         self.send_dict[key] = value
 
-    def set_name(self,name:str=None):
-        self.send_dict['Name'] = name
 
-    def set_type(self,type:str=None):
-        self.send_dict['Type'] = type
+    def set_name(self, name: str = None):
+        self.send_dict["Name"] = name
+
+
+    def set_type(self, type: str = None):
+        self.send_dict["Type"] = type
 
 
 if __name__ == "__main__":
@@ -157,7 +175,7 @@ if __name__ == "__main__":
                 # get
                 print(sc.recv_dict)
                 # set
-                sc.send_dict = 'ok'
+                sc.send_dict = "ok"
 
             time.sleep(0.1)
     finally:
