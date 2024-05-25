@@ -9,6 +9,7 @@ config.py
 
 IoT-Project-backups/
 Output/
+Unused/
 *.zip
 fp-info-cache
 
