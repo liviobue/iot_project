@@ -18,9 +18,9 @@ class AlertManager:
         self._nh3_alert = False
         self._co_alert = False
         self._o2_alert = False
-        self.nh3_alert_level = 50 # Normally above 50 PPM for a 8-Hour-Shift
-        self.co_alert_level = 100 # Normally above 100PPM
-        self.o2_alert_level = 20 # Normally below 17%
+        self.nh3_alert_level = 50 # Health risk NH3 above 50 PPM for a 8-Hour-Shift
+        self.co_alert_level = 100 # Health risk CO above 100PPM
+        self.o2_alert_level = 20 # Health risk O2 below 17%
 
 
     def _setup(self):
@@ -31,23 +31,23 @@ class AlertManager:
         GPIO.output(led_green, GPIO.HIGH)  # make green ledPin output HIGH level
 
         # NH3-LED
-        GPIO.setup(nh3_led_red, GPIO.OUT)  # set the red ledPin to OUTPUT mode
-        GPIO.output(nh3_led_red, GPIO.LOW)  # make red ledPin output LOW level
+        GPIO.setup(nh3_sensor, GPIO.OUT)  # set the red ledPin to OUTPUT mode
+        GPIO.output(nh3_sensor, GPIO.LOW)  # make red ledPin output LOW level
 
         # CO-LED
-        GPIO.setup(co_led_red, GPIO.OUT)  # set the red ledPin to OUTPUT mode
-        GPIO.output(co_led_red, GPIO.LOW)  # make red ledPin output LOW level
+        GPIO.setup(co_sensor, GPIO.OUT)  # set the red ledPin to OUTPUT mode
+        GPIO.output(co_sensor, GPIO.LOW)  # make red ledPin output LOW level
 
         # O2-LED
-        GPIO.setup(o2_led_red, GPIO.OUT)  # set the red ledPin to OUTPUT mode
-        GPIO.output(o2_led_red, GPIO.LOW)  # make red ledPin output LOW level
+        GPIO.setup(o2_sensor, GPIO.OUT)  # set the red ledPin to OUTPUT mode
+        GPIO.output(o2_sensor, GPIO.LOW)  # make red ledPin output LOW level
 
         # Buzzer-Pin
         GPIO.setup(buzzerpin, GPIO.OUT)  # set buzzerPin to OUTPUT modea
 
         # Button
         GPIO.setup(
-            buttonpin, GPIO.IN, pull_up_down=GPIO.PUD_UP
+            switch, GPIO.IN, pull_up_down=GPIO.PUD_UP
         )  # set buttonPin to PULL UP INPUT mode
 
     
@@ -72,7 +72,7 @@ class AlertManager:
 
         with anyio.move_on_after(max_wait_time):  # Runs until max_wait_time is over
             while True:
-                current_button_state = GPIO.input(buttonpin) == GPIO.LOW
+                current_button_state = GPIO.input(switch) == GPIO.LOW
                 if not previous_button_state and current_button_state:
                     return "button pressed", previous_button_state
 
@@ -110,9 +110,9 @@ class AlertManager:
             while True:
 
                 # Blink-On-Phase
-                GPIO.output(nh3_led_red, GPIO.HIGH if self._nh3_alert else GPIO.LOW)
-                GPIO.output(co_led_red, GPIO.HIGH if self._co_alert else GPIO.LOW)
-                GPIO.output(o2_led_red, GPIO.HIGH if self._o2_alert else GPIO.LOW)
+                GPIO.output(nh3_sensor, GPIO.HIGH if self._nh3_alert else GPIO.LOW)
+                GPIO.output(co_sensor, GPIO.HIGH if self._co_alert else GPIO.LOW)
+                GPIO.output(o2_sensor, GPIO.HIGH if self._o2_alert else GPIO.LOW)
                 GPIO.output(buzzerpin, GPIO.HIGH)
 
                 result, button_state = await self.wait_for_alert_end(0.4, button_state)
@@ -120,9 +120,9 @@ class AlertManager:
                     break  # -> to ACKNOWLEDGE-MODE or to Normal-State
 
                 # Blink-Off-Phase
-                GPIO.output(nh3_led_red, GPIO.LOW)
-                GPIO.output(co_led_red, GPIO.LOW)
-                GPIO.output(o2_led_red, GPIO.LOW)
+                GPIO.output(nh3_sensor, GPIO.LOW)
+                GPIO.output(co_sensor, GPIO.LOW)
+                GPIO.output(o2_sensor, GPIO.LOW)
                 GPIO.output(buzzerpin, GPIO.LOW)
 
                 result, button_state = await self.wait_for_alert_end(0.4, button_state)
@@ -140,16 +140,16 @@ class AlertManager:
                 GPIO.output(buzzerpin, GPIO.LOW)
 
                 while self._any_alert:
-                    current_button_state = GPIO.input(buttonpin) == GPIO.LOW
+                    current_button_state = GPIO.input(switch) == GPIO.LOW
 
                     if (
                         not previous_button_state and current_button_state
                     ):  # Checks if there was a change from not-pressed to pressed
                         break
 
-                    GPIO.output(nh3_led_red, GPIO.HIGH if self._nh3_alert else GPIO.LOW)
-                    GPIO.output(co_led_red, GPIO.HIGH if self._co_alert else GPIO.LOW)
-                    GPIO.output(o2_led_red, GPIO.HIGH if self._o2_alert else GPIO.LOW)
+                    GPIO.output(nh3_sensor, GPIO.HIGH if self._nh3_alert else GPIO.LOW)
+                    GPIO.output(co_sensor, GPIO.HIGH if self._co_alert else GPIO.LOW)
+                    GPIO.output(o2_sensor, GPIO.HIGH if self._o2_alert else GPIO.LOW)
 
                     previous_button_state = current_button_state
                     await anyio.sleep(0.1)
@@ -160,7 +160,7 @@ class AlertManager:
         Mode without alert
         """
         GPIO.output(led_green, GPIO.HIGH)
-        GPIO.output(nh3_led_red, GPIO.LOW)
-        GPIO.output(co_led_red, GPIO.LOW)
-        GPIO.output(o2_led_red, GPIO.LOW)
+        GPIO.output(nh3_sensor, GPIO.LOW)
+        GPIO.output(co_sensor, GPIO.LOW)
+        GPIO.output(o2_sensor, GPIO.LOW)
         GPIO.output(buzzerpin, GPIO.LOW)
