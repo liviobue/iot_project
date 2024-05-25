@@ -5,9 +5,9 @@ import os
 import trio
 import anyio
 
-from multigas_sensors import MultiGasSensor, SensorType
-from alert_handling import AlertManager
-from db_connect import connect_to_db, represent_for_mongodb
+from .multigas_sensors import MultiGasSensor, SensorType
+from .alert_handling import AlertManager
+from .db_connect import connect_to_db, represent_for_mongodb
 
 i2cbus          = 1
 NH3_ADDRESS     = 0x75
@@ -99,4 +99,4 @@ async def main():
         
         
 if __name__ == "__main__":
-    trio.run(main())   
+    trio.run(main)   
