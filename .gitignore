@@ -1,5 +1,13 @@
-.ipynb_checkpoints
 __pycache__/
 config.py
 .venv
+
+.ipynb_checkpoints
 .DS_Store
+*.DS*
+
+*/IoT-Project-backups
+*/Output
+*.zip
+
+*Screenshot*
