@@ -31,7 +31,6 @@ co_led_red      = 24
 o2_led_red      = 25
 led_green       = 12
 
-
 nh3_alert       = False
 co_alert        = False
 o2_alert        = False

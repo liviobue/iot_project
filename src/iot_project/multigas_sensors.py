@@ -1,28 +1,11 @@
-import os
-import datetime
 import enum
 import time
 import dataclasses
 import struct
 import math
 import binascii
-import typing
 
-import dotenv
 import smbus
-import pymongo
-import trio
-import bokeh.io
-import bokeh.plotting
-import bokeh.models
-import bokeh as bk
-import numpy as np
-import RPi.GPIO as GPIO
-import httpx
-
-bk.io.output_notebook()
-%autoawait trio
-
 
 
 class CmdCode(enum.Enum):

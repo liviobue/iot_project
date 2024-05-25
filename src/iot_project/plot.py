@@ -1,24 +1,9 @@
-import os
-import datetime
-import enum
-import time
-import dataclasses
-import struct
-import math
-import binascii
-import typing
 
-
-import trio
 import bokeh.io
 import bokeh.plotting
 import bokeh.models
 import bokeh as bk
 import numpy as np
-import RPi.GPIO as GPIO
-import httpx
-
-%autoawait trio
 
 
 def fig_setup(nh3_alert_level, co_alert_level, o2_alert_level):

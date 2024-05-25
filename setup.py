@@ -10,11 +10,19 @@ setup(
     package_data={"iot_project"},
     setup_requires = ["setuptools-scm"],
     install_requires=[
-        "pandas",
         "pymongo",
-        "bokeh",
+        "anyio",
+        "RPi.GPIO",
+        "smbus2",
+        "numpy",
+        "trio",
+        "dotenv",
     ],
-    
+    extras_require={
+        "notebook": [
+            "bokeh",
+        ],
+    },
     author='Daniela Komenda, Livio Bürgisser, Noémie Käser',
     author_email='komendan@students.zhaw.ch, buergli1@students.zhaw.ch, kaeseno1@students.zhaw.ch',
     description='IoT-Project for IoT-Course at ZHAW - FS24',
