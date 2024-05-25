@@ -1,0 +1,116 @@
+[
+    {
+        "id": "38ce685d7dd3bebf",
+        "type": "tab",
+        "label": "Send WhatsApp messages",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "41a68414086d3590",
+        "type": "mongodb in",
+        "z": "38ce685d7dd3bebf",
+        "mongodb": "7f1b10bb3b88dbcc",
+        "name": "Access Data",
+        "collection": "Raw-Data",
+        "operation": "find",
+        "x": 230,
+        "y": 240,
+        "wires": [
+            [
+                "659923622cc5f6d4"
+            ]
+        ]
+    },
+    {
+        "id": "09698bb87771bfcb",
+        "type": "inject",
+        "z": "38ce685d7dd3bebf",
+        "name": "Inject",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "41a68414086d3590"
+            ]
+        ]
+    },
+    {
+        "id": "659923622cc5f6d4",
+        "type": "function",
+        "z": "38ce685d7dd3bebf",
+        "name": "Check Sensor Values",
+        "func": "const nh3Threshold = 50;\nconst coThreshold = 100;\nconst o2Threshold = 20;\n\nif (msg.payload && msg.payload.length > 0) {\n    let latestData = msg.payload[0]; // Passe dies an deine Datensatzstruktur an\n    let nh3Value = latestData.nh3;\n    let coValue = latestData.co;\n    let o2Value = latestData.o2;\n    \n    if (nh3Value > nh3Threshold || coValue > coThreshold || o2Value < o2Threshold) {\n        let message = 'Achtung Gefahr! ';\n        if (nh3Value > nh3Threshold) message += `NH3 über ${nh3Threshold}! `;\n        if (coValue > coThreshold) message += `CO über ${coThreshold}! `;\n        if (o2Value < o2Threshold) message += `O2 unter ${o2Threshold}!`;\n        msg.payload = message;\n        msg.phoneNumber = '+491234567890'; // Ziel-Telefonnummer hier einfügen\n        msg.apiKey = 'YOUR_API_KEY'; // API-Schlüssel hier einfügen\n        return [msg, null];\n    }\n}\nreturn [null, msg];",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 300,
+        "wires": [
+            [
+                "231cd7812d4ae3e3"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "043c01fc35959b19",
+        "type": "debug",
+        "z": "38ce685d7dd3bebf",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "231cd7812d4ae3e3",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "38ce685d7dd3bebf",
+        "name": "",
+        "credtype": "account",
+        "account": "80b99021.9a4",
+        "text": "",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 520,
+        "y": 360,
+        "wires": [
+            [
+                "043c01fc35959b19"
+            ]
+        ]
+    },
+    {
+        "id": "80b99021.9a4",
+        "type": "node-red-contrib-whatsapp-cmb-account",
+        "name": "WhatsApp API Account"
+    }
+]
