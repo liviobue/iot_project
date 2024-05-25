@@ -3,14 +3,14 @@ import typing
 import anyio
 import RPi.GPIO as GPIO
 
+nh3_sensor      = 19
+co_sensor       = 23
+o2_sensor       = 32
+other_sensor    = 21
 
-buttonpin = 18
-buzzerpin = 17
-nh3_led_red = 23
-co_led_red = 24
-o2_led_red = 25
-led_green = 12
-
+led_green       = 31
+buzzerpin       = 38
+switch          = 29
 
 class AlertManager:
 
@@ -24,7 +24,7 @@ class AlertManager:
 
 
     def _setup(self):
-        GPIO.setmode(GPIO.BCM)  # use LOGICAL GPIO Numbering
+        GPIO.setmode(GPIO.BOARD) # use BOARD PIN Numbering  # use LOGICAL GPIO Numbering
 
         # Green LED
         GPIO.setup(led_green, GPIO.OUT)
@@ -49,13 +49,16 @@ class AlertManager:
         GPIO.setup(
             buttonpin, GPIO.IN, pull_up_down=GPIO.PUD_UP
         )  # set buttonPin to PULL UP INPUT mode
-        
+
+    
     def __enter__(self):
         self._setup()
-        
+
+    
     def __exit__(self, type, value, tb):
         GPIO.cleanup()
 
+    
     def check_alerts(self, *, ammonia, carbon_monoxide, oxygen):
         # Check if alerts are True
         self._nh3_alert = ammonia>self.nh3_alert_level
