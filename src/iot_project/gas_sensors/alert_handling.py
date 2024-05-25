@@ -89,6 +89,7 @@ class AlertManager:
     def _any_alert(self):
         return self._nh3_alert or self._co_alert or self._o2_alert
 
+    
     async def alert_loop(self):
         """
         Check if an alert is present or not
