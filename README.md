@@ -18,7 +18,7 @@ Create `.env`-file with `MONGO_URI` containing the connectionstring to your IoT-
 
 Then, run:
 ```bash
-python -m iot_project.gas_sensors.gas_monitoring_system
+python -m iot_project.main
 ```
 
 
