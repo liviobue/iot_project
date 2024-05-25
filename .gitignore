@@ -6,8 +6,9 @@ config.py
 .DS_Store
 *.DS*
 
-*/IoT-Project-backups
-*/Output
+IoT-Project-backups/
+Output/
 *.zip
+fp-info-cache
 
 *Screenshot*
