@@ -81,14 +81,15 @@ class MonitoringSystem:
                             for k, v in self.sensors.items()
                         }
 
+                        for k, v in data:
+                            print(f'{k}: {v}')
+
                     except Exception as ex:
-                        # print(f'{ex!r} - retry')
+                        print(f'{ex!r} - retry')
                         await trio.sleep(0.05)
                         continue
 
                     for k, v in data.items():
-                        if not v:
-                            v=0
                         all_data[k].append((time, v))
 
                     self.alert_manager.check_alerts(
