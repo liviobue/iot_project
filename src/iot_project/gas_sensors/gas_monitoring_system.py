@@ -87,6 +87,8 @@ class MonitoringSystem:
                         continue
 
                     for k, v in data.items():
+                        if not v:
+                            v=0
                         all_data[k].append((time, v))
 
                     self.alert_manager.check_alerts(
@@ -100,11 +102,7 @@ class MonitoringSystem:
 
                 # Aggregate Data
                 next_aggregation += self.aggregation_interval
-                
-                for k, v in all_data.items():
-                    if not v:
-                        v=0
-                    aggregation = {k: self.aggregate_data(v)}
+                aggregation = {k: self.aggregate_data(v) for k, v in all_data.items()}
                 aggregation.update(time=time)
 
                 collection.insert_one(represent_for_mongodb(aggregation))
