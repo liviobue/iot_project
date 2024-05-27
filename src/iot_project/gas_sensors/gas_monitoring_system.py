@@ -46,19 +46,24 @@ class MonitoringSystem:
     def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]:
         if not alldata:
             # sensor seems to be continuously failing (no data during aggregation interval)
-            return None
-        
-        data = np.array([data for time, data in alldata])
+            aggregation = dict(
+                min=None,
+                max=None,
+                avg=None,
+            )
 
-        min = data.min()
-        max = data.max()
-        avg = data.mean()
+        else:
+            data = np.array([data for time, data in alldata])
 
-        aggregation = dict(
-            min=min,
-            max=max,
-            avg=avg,
-        )
+            min = data.min()
+            max = data.max()
+            avg = data.mean()
+
+            aggregation = dict(
+                min=min,
+                max=max,
+                avg=avg,
+            )
 
         return aggregation
 
