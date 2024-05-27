@@ -87,7 +87,7 @@ class MonitoringSystem:
                         try:
                             result = v.read_all().gas_concentration
                         except Exception as ex:
-                            #print(f'{ex!r} - retry')
+                            print(f'{ex!r} - retry')
                             continue
                         data[k] = result
                         all_data[k].append(result)
