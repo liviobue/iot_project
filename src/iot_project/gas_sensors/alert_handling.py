@@ -62,11 +62,14 @@ class AlertManager:
         GPIO.cleanup()
 
 
-    def check_alerts(self, *, ammonia, carbon_monoxide, oxygen):
+    def check_alerts(self, *, nh3=None, co=None, o2=None):
         # Check if alerts are True
-        self._nh3_alert = ammonia > self.nh3_alert_level
-        self._co_alert = carbon_monoxide > self.co_alert_level
-        self._o2_alert = oxygen < self.o2_alert_level
+        if nh3 is not None:
+            self._nh3_alert = nh3 > self.nh3_alert_level
+        if co is not None:
+            self._co_alert = co > self.co_alert_level
+        if o2 is not None:
+            self._o2_alert = o2 < self.o2_alert_level
 
 
     async def wait_for_alert_end(

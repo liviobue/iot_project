@@ -44,6 +44,10 @@ class MonitoringSystem:
 
 
     def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]:
+        if not alldata:
+            # sensor seems to be continuously failing (no data during aggregation interval)
+            return None
+        
         data = np.array([data for time, data in alldata])
 
         min = data.min()
@@ -68,44 +72,49 @@ class MonitoringSystem:
 
             while True:
                 all_data = {k: [] for k in self.sensors}
-
-                while trio.current_time() < next_aggregation:
-                    try:
-                        time = (
-                            datetime.datetime.now()
-                            .astimezone(None)
-                            .astimezone(datetime.timezone.utc)
+                time = None
+                data = {}
+                while trio.current_time() < next_aggregation:                    
+                    time = (
+                        datetime.datetime.now()
+                        .astimezone(None)
+                        .astimezone(datetime.timezone.utc)
+                    )
+                    for k, v in self.sensors.items():
+                        if k in data:
+                            # we must be re-trying some failed sensors; this one was successful before, don't retry this one.
+                            continue
+                        try:
+                            result = v.read_all().gas_concentration
+                        except Exception as ex:
+                            #print(f'{ex!r} - retry')
+                            continue
+                        data[k] = result
+                        all_data[k].append(result)
+                        self.alert_manager.check_alerts(
+                            **{k.lower(): result}
                         )
-                        data = {
-                            k: v.read_all().gas_concentration
-                            for k, v in self.sensors.items()
-                        }
 
-                        for k, v in data:
-                            print(f'{k}: {v}')
-
-                    except Exception as ex:
-                        print(f'{ex!r} - retry')
+                    if len(data) < len(self.sensors):
+                        # not all sensors have data yet; let's retry
                         await trio.sleep(0.05)
                         continue
 
-                    for k, v in data.items():
-                        all_data[k].append((time, v))
 
-                    self.alert_manager.check_alerts(
-                        ammonia=data["NH3"],
-                        carbon_monoxide=data["CO"],
-                        oxygen=data["O2"],
-                    )
-
+                    # we have results from all sensors; let's wait ...
                     await anyio.sleep_until(next_measurement)
                     next_measurement += self.measurement_interval
+                    
+                    # ... and make sure we're reading all sensors again
+                    data = {}
 
                 # Aggregate Data
                 next_aggregation += self.aggregation_interval
                 aggregation = {k: self.aggregate_data(v) for k, v in all_data.items()}
                 aggregation.update(time=time)
-
+                
+                if any(v is None for v in aggregation.values()):
+                    print(f"Sensor-Problem: {aggregation}")
                 collection.insert_one(represent_for_mongodb(aggregation))
 
                 print(aggregation)
