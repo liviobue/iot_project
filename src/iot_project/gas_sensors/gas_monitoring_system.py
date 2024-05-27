@@ -81,12 +81,16 @@ class MonitoringSystem:
                 all_data = {k: [] for k in self.sensors}
                 time = None
                 data = {}
+                
                 while trio.current_time() < next_aggregation:                    
                     time = (
                         datetime.datetime.now()
                         .astimezone(None)
                         .astimezone(datetime.timezone.utc)
                     )
+                    
+                    print("blabla", time)
+                    
                     for k, v in self.sensors.items():
                         if k in data:
                             # we must be re-trying some failed sensors; this one was successful before, don't retry this one.
@@ -96,6 +100,7 @@ class MonitoringSystem:
                         except Exception as ex:
                             print(f'{ex!r} - retry')
                             continue
+                        
                         data[k] = result
                         all_data[k].append(result)
                         self.alert_manager.check_alerts(
