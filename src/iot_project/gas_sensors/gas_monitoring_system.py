@@ -102,7 +102,7 @@ class MonitoringSystem:
                             continue
                         
                         data[k] = result
-                        all_data[k].append(result)
+                        all_data[k].append((time, result))
                         self.alert_manager.check_alerts(
                             **{k.lower(): result}
                         )
