@@ -43,11 +43,11 @@ class MonitoringSystem:
         return self.alert_manager.__exit__(type, value, tb)
 
 
-    def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]:
+    def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]: # tuple(time, data)
         print(alldata)
         
         if not alldata:
-            # sensor seems to be continuously failing (no data during aggregation interval)
+            # Sensor seems to be failing for the whole Aggregation-Intervall (no data)
             aggregation = dict(
                 min=None,
                 max=None,
@@ -89,16 +89,14 @@ class MonitoringSystem:
                         .astimezone(datetime.timezone.utc)
                     )
                     
-                    print("blabla", time)
-                    
                     for k, v in self.sensors.items():
                         if k in data:
-                            # we must be re-trying some failed sensors; this one was successful before, don't retry this one.
+                            # If some Sensors fail, there is a re-try. If k is in data, then this Sensor was already successful
                             continue
                         try:
                             result = v.read_all().gas_concentration
                         except Exception as ex:
-                            print(f'{ex!r} - retry')
+                            #print(f'{ex!r} - retry')
                             continue
                         
                         data[k] = result
@@ -108,16 +106,16 @@ class MonitoringSystem:
                         )
 
                     if len(data) < len(self.sensors):
-                        # not all sensors have data yet; let's retry
+                        # If not all Sensors have data, there is a re-try after 0.05 seconds
                         await trio.sleep(0.05)
                         continue
 
 
-                    # we have results from all sensors; let's wait ...
+                    # If there are data from all the sensors, we wait until the next measurement
                     await anyio.sleep_until(next_measurement)
                     next_measurement += self.measurement_interval
                     
-                    # ... and make sure we're reading all sensors again
+                    # Empty the Data-Set, so all Sensors are measured again
                     data = {}
 
                 # Aggregate Data
