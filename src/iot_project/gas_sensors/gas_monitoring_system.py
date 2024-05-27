@@ -100,7 +100,12 @@ class MonitoringSystem:
 
                 # Aggregate Data
                 next_aggregation += self.aggregation_interval
-                aggregation = {k: self.aggregate_data(v) for k, v in all_data.items()}
+                
+                for k, v in all_data.items():
+                    if not v:
+                        v=0
+                    else:
+                        aggregation = {k: self.aggregate_data(v)}
                 aggregation.update(time=time)
 
                 collection.insert_one(represent_for_mongodb(aggregation))
