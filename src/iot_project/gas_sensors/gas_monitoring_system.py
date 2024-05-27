@@ -44,6 +44,8 @@ class MonitoringSystem:
 
 
     def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]:
+        print(alldata)
+        
         if not alldata:
             # sensor seems to be continuously failing (no data during aggregation interval)
             aggregation = dict(
