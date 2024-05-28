@@ -14,7 +14,7 @@ setup(
         "smbus",
         "numpy",
         "trio",
-        "dotenv",
+        "python-dotenv",
         "websockets",
     ],
     extras_require={
