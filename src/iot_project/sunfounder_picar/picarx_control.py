@@ -25,8 +25,10 @@ async def car_control_loop(real_picar: bool = True):
     if real_picar:
         import picarx
         picarx.__dict__["os"] = DummyOSModule()
+        print("real picar")
         px = picarx.Picarx()
 
+    print("Checkpoint")
     sc = SunFounderController()
     sc.set_name("Explorer")
     sc.set_type("PiCar-X")
