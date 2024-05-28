@@ -5,6 +5,14 @@ import trio
 from .sunfounder_controller import SunFounderController
 
 
+
+class DummyOSModule:
+    @staticmethod
+    def getLogin():
+        print("Login-Overwrite")
+        return None
+
+
 """
 Adapted from https://github.com/sunfounder/sunfounder-controller/blob/master/examples/picarx_control.py
 """
@@ -16,6 +24,7 @@ control_history = []
 async def car_control_loop(real_picar: bool = True):
     if real_picar:
         import picarx
+        picarx.__dict__["os"] = DummyOSModule()
         px = picarx.Picarx()
 
     sc = SunFounderController()
