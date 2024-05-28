@@ -2,7 +2,7 @@ import os
 
 import trio
 
-from .sunfounder_picar.picarx_control import main_control_loop
+from .sunfounder_picar.picarx_control import car_control_loop
 from .gas_sensors.gas_monitoring_system import MonitoringSystem
 
 
@@ -19,7 +19,7 @@ async def main():
 
     with system:
         async with trio.open_nursery() as nursery:
-            nursery.start_soon(main_control_loop)
+            nursery.start_soon(car_control_loop)
             nursery.start_soon(system.main_task)
 
 
