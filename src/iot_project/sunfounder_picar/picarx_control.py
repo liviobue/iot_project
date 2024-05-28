@@ -8,7 +8,7 @@ from .sunfounder_controller import SunFounderController
 
 class DummyOSModule:
     @staticmethod
-    def getLogin():
+    def getlogin():
         print("Login-Overwrite")
         return None
 
