@@ -13,11 +13,10 @@ speed_values = [0, 10, 20, 40, 80]
 control_history = []
 
 
-async def main_control_loop(real_picar: bool = True):
-    if real_picar:
-        import picarx
-
-        px = picarx.Picarx()
+async def car_control_loop(real_picar: bool = True):
+    #if real_picar:
+    #    import picarx
+    #    px = picarx.Picarx()
 
     sc = SunFounderController()
     sc.set_name("Explorer")
@@ -97,7 +96,7 @@ async def main_control_loop(real_picar: bool = True):
 
 async def main(args):
     async with trio.open_nursery() as nursery:
-        nursery.start_soon(main_control_loop, not args.mock)
+        nursery.start_soon(car_control_loop, not args.mock)
 
 
 if __name__ == "__main__":
