@@ -8,7 +8,6 @@ config.py
 *.DS*
 
 IoT-Project-backups/
-Output/
 Unused/
 Bilder/
 *.zip

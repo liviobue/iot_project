@@ -63,7 +63,7 @@ class MultiGasSensor:
         data += b"\x00" * (8 - len(data))
         data += bytes([self.calc_check_sum(data[1:-1])])
         self.i2c_bus.write_i2c_block_data(self.i2c_address, 0, list(data))
-        time.sleep(0.1)  # TO-DO: async-sleept machen
+        time.sleep(0.1)  # TO-DO: async-sleep machen
 
         result = self.i2c_bus.read_i2c_block_data(self.i2c_address, 0, 9)
         result = bytes(result)
