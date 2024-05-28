@@ -14,9 +14,9 @@ control_history = []
 
 
 async def car_control_loop(real_picar: bool = True):
-    #if real_picar:
-    #    import picarx
-    #    px = picarx.Picarx()
+    if real_picar:
+        import picarx
+        px = picarx.Picarx()
 
     sc = SunFounderController()
     sc.set_name("Explorer")
