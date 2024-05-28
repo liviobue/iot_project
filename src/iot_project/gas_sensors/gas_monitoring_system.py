@@ -43,9 +43,7 @@ class MonitoringSystem:
         return self.alert_manager.__exit__(type, value, tb)
 
 
-    def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]: # tuple(time, data)
-        print(alldata)
-        
+    def aggregate_data(self, alldata: list[tuple[float, float]]) -> dict[str, float]: # tuple(time, data)        
         if not alldata:
             # Sensor seems to be failing for the whole Aggregation-Intervall (no data)
             aggregation = dict(
