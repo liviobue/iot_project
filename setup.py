@@ -11,7 +11,7 @@ setup(
         "pymongo",
         "anyio",
         "RPi.GPIO",
-        "smbus2",
+        "smbus",
         "numpy",
         "trio",
         "dotenv",
