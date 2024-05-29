@@ -16,7 +16,7 @@ setup(
         "trio",
         "python-dotenv",
         "websockets",
-        "picarx",
+        "picar-x",
     ],
     extras_require={
         "notebook": [
