@@ -1,0 +1,99 @@
+[
+    {
+        "id": "10c5f92a676b3d97",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c12b77f2cd49e090",
+        "type": "function",
+        "z": "10c5f92a676b3d97",
+        "name": "Check Sensor Values",
+        "func": "const nh3Threshold = 50;\nconst coThreshold = 100;\nconst o2Threshold = 20;\n\nif (msg.payload && msg.payload.length > 0) {\n    let latestData = msg.payload[0]; // Passe dies an deine Datensatzstruktur an\n    let nh3Value = latestData.nh3;\n    let coValue = latestData.co;\n    let o2Value = latestData.o2;\n    \n    if (nh3Value > nh3Threshold || coValue > coThreshold || o2Value < o2Threshold) {\n        let message = 'Achtung Gefahr! ';\n        if (nh3Value > nh3Threshold) message += `NH3 über ${nh3Threshold}! `;\n        if (coValue > coThreshold) message += `CO über ${coThreshold}! `;\n        if (o2Value < o2Threshold) message += `O2 unter ${o2Threshold}!`;\n        msg.payload = message;\n        msg.phoneNumber = '+491234567890'; // Ziel-Telefonnummer hier einfügen\n        msg.apiKey = 'YOUR_API_KEY'; // API-Schlüssel hier einfügen\n        return [msg, null];\n    }\n}\nreturn [null, msg];",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 120,
+        "wires": [
+            [
+                "51b66aecf36d9365"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f1234eb860924913",
+        "type": "mongodb in",
+        "z": "10c5f92a676b3d97",
+        "mongodb": "ae56f20f78338ce9",
+        "name": "Access Data",
+        "collection": "Raw-Data",
+        "operation": "find",
+        "x": 290,
+        "y": 120,
+        "wires": [
+            [
+                "c12b77f2cd49e090"
+            ]
+        ]
+    },
+    {
+        "id": "9203f028e79952a7",
+        "type": "inject",
+        "z": "10c5f92a676b3d97",
+        "name": "Inject",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "f1234eb860924913"
+            ]
+        ]
+    },
+    {
+        "id": "51b66aecf36d9365",
+        "type": "e-mail",
+        "z": "10c5f92a676b3d97",
+        "server": "smtp.office365.com",
+        "port": "587",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "kaeseno1@students.zhaw.ch",
+        "dname": "Mail kaeseno1",
+        "x": 760,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ae56f20f78338ce9",
+        "type": "mongodb",
+        "z": "fea15aab4a789ebf",
+        "hostname": "zhaw.wqz6tdw.mongodb.net",
+        "topology": "dnscluster",
+        "connectOptions": "",
+        "port": "27017",
+        "db": "IoT-Project",
+        "name": "mongodb"
+    }
+]
