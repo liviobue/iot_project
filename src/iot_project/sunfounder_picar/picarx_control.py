@@ -17,7 +17,7 @@ class DummyOSModule:
 Adapted from https://github.com/sunfounder/sunfounder-controller/blob/master/examples/picarx_control.py
 """
 
-speed_values = [0, 10, 20, 40, 80]
+speed_values = [0, 10, 20, 30]
 control_history = []
 
 
