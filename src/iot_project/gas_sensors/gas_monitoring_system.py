@@ -17,7 +17,7 @@ O2_ADDRESS = 0x77
 
 class MonitoringSystem:
 
-    def __init__(self, mongo_uri, *, measurement_interval=0.1, aggregation_interval=2):
+    def __init__(self, mongo_uri, *, measurement_interval=0.1, aggregation_interval=0.5):
         self.mongo_uri = mongo_uri
         self.alert_manager = AlertManager()
         self.measurement_interval = measurement_interval

@@ -16,11 +16,9 @@ setup(
         "trio",
         "python-dotenv",
         "websockets",
-        "gpiozero",
-        "smbus2"
     ],
     extras_require={
-        "notebook": [
+          "notebook": [
             "bokeh",
         ],
     },
