@@ -1,52 +1,205 @@
 [
     {
-        "id": "10c5f92a676b3d97",
+        "id": "fea15aab4a789ebf",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Dashboard",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "c12b77f2cd49e090",
-        "type": "function",
-        "z": "10c5f92a676b3d97",
-        "name": "Check Sensor Values",
-        "func": "const nh3Threshold = 50;\nconst coThreshold = 100;\nconst o2Threshold = 20;\n\nif (msg.payload && msg.payload.length > 0) {\n    let latestData = msg.payload[0]; // Passe dies an deine Datensatzstruktur an\n    let nh3Value = latestData.nh3;\n    let coValue = latestData.co;\n    let o2Value = latestData.o2;\n    \n    if (nh3Value > nh3Threshold || coValue > coThreshold || o2Value < o2Threshold) {\n        let message = 'Achtung Gefahr! ';\n        if (nh3Value > nh3Threshold) message += `NH3 über ${nh3Threshold}! `;\n        if (coValue > coThreshold) message += `CO über ${coThreshold}! `;\n        if (o2Value < o2Threshold) message += `O2 unter ${o2Threshold}!`;\n        msg.payload = message;\n        msg.phoneNumber = '+491234567890'; // Ziel-Telefonnummer hier einfügen\n        msg.apiKey = 'YOUR_API_KEY'; // API-Schlüssel hier einfügen\n        return [msg, null];\n    }\n}\nreturn [null, msg];",
-        "outputs": 2,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 120,
-        "wires": [
-            [
-                "51b66aecf36d9365"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "f1234eb860924913",
+        "id": "e194ca4db269307b",
         "type": "mongodb in",
-        "z": "10c5f92a676b3d97",
+        "z": "fea15aab4a789ebf",
         "mongodb": "ae56f20f78338ce9",
         "name": "Access Data",
         "collection": "Raw-Data",
         "operation": "find",
         "x": 290,
-        "y": 120,
+        "y": 280,
         "wires": [
             [
-                "c12b77f2cd49e090"
+                "629e767fd856e133",
+                "8a6cbdc5fd037938",
+                "7e4080292822b7da"
             ]
         ]
     },
     {
-        "id": "9203f028e79952a7",
+        "id": "110db2c7f61bf086",
+        "type": "debug",
+        "z": "fea15aab4a789ebf",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "jsonata",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "629e767fd856e133",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "parse data nh3",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = parseFloat(lastDoc.NH3.avg.toFixed(2));\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 280,
+        "wires": [
+            [
+                "e0a7b7df10883b49",
+                "110db2c7f61bf086",
+                "d22a5032bd8ce58e",
+                "56e985170858b899"
+            ]
+        ]
+    },
+    {
+        "id": "e0a7b7df10883b49",
+        "type": "ui_chart",
+        "z": "fea15aab4a789ebf",
+        "name": "NH3 Chart",
+        "group": "92b7cf35f1e219e5",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "NH3 Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "nh3",
+        "x": 750,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "402b0e799c74f8da",
+        "type": "ui_chart",
+        "z": "fea15aab4a789ebf",
+        "name": "CO Chart",
+        "group": "a7faf3b35ab36b3b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "CO Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "co",
+        "x": 740,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f6f72340e4717e51",
+        "type": "ui_chart",
+        "z": "fea15aab4a789ebf",
+        "name": "O2 Chart",
+        "group": "0eb95b8c5961010a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "O2 Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "o2",
+        "x": 740,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd5052b0a220998a",
         "type": "inject",
-        "z": "10c5f92a676b3d97",
+        "z": "fea15aab4a789ebf",
         "name": "Inject",
         "props": [
             {
@@ -60,30 +213,394 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 130,
-        "y": 120,
+        "x": 110,
+        "y": 280,
         "wires": [
             [
-                "f1234eb860924913"
+                "e194ca4db269307b"
             ]
         ]
     },
     {
-        "id": "51b66aecf36d9365",
+        "id": "8a6cbdc5fd037938",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "parse data co",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = parseFloat(lastDoc.CO.avg.toFixed(2));\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 400,
+        "wires": [
+            [
+                "402b0e799c74f8da",
+                "6abfcedda54d4fba",
+                "ee2adb17e4874908"
+            ]
+        ]
+    },
+    {
+        "id": "7e4080292822b7da",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "parse data O2",
+        "func": "if (msg.payload.length > 0) {\n    var lastDoc = msg.payload[msg.payload.length - 1];\n    msg.payload = parseFloat(lastDoc.O2.avg.toFixed(2));\n} else {\n    msg.payload = null; // or any default value you prefer\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 520,
+        "wires": [
+            [
+                "f6f72340e4717e51",
+                "f277371b21957b83",
+                "1a3276bfcb5fb685"
+            ]
+        ]
+    },
+    {
+        "id": "f277371b21957b83",
+        "type": "ui_gauge",
+        "z": "fea15aab4a789ebf",
+        "name": "O2 Value",
+        "group": "0eb95b8c5961010a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "O2 Value",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#00b500"
+        ],
+        "seg1": "15",
+        "seg2": "19.5",
+        "diff": false,
+        "className": "o2",
+        "x": 740,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "6abfcedda54d4fba",
+        "type": "ui_gauge",
+        "z": "fea15aab4a789ebf",
+        "name": "",
+        "group": "a7faf3b35ab36b3b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "CO Value",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "300",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "100",
+        "seg2": "",
+        "diff": false,
+        "className": "co",
+        "x": 740,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d22a5032bd8ce58e",
+        "type": "ui_gauge",
+        "z": "fea15aab4a789ebf",
+        "name": "",
+        "group": "92b7cf35f1e219e5",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "NH3 Value",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "400",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "50",
+        "seg2": "",
+        "diff": false,
+        "className": "nh3",
+        "x": 750,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5ff3ad96854f6383",
+        "type": "ui_text",
+        "z": "fea15aab4a789ebf",
+        "group": "e267505017fd8305",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "As part of our IoT project, we have developed a PyCar equipped with sensors capable of measuring the parts per million (ppm) of Ammonia, Oxygen, and Carbon Monoxide. This initiative aims to monitor and analyze air quality in various environments, providing crucial data to ensure safety and promote healthier living conditions. By continuously tracking these gases, our PyCar can detect potentially hazardous levels, helping to prevent exposure to toxic substances and contributing to environmental research and public health efforts.",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 900,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "25eaa1b55ae74462",
+        "type": "ui_text",
+        "z": "fea15aab4a789ebf",
+        "group": "e267505017fd8305",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "@Livio Bürgisser, Noémie Käser, Daniela Komenda",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 250,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "75b6d982bcb48b67",
+        "type": "ui_template",
+        "z": "fea15aab4a789ebf",
+        "group": "e267505017fd8305",
+        "name": "",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    /* General background and text colors */\n    body.nr-dashboard-theme md-content.md-default-theme,\n    body.nr-dashboard-theme {\n        background-color: #f8f9fa !important;\n        color: #212529 !important;\n    }\n\n    /* Navbar customization */\n    .nr-dashboard-theme .nr-dashboard-header,\n    .nr-dashboard-theme .nr-dashboard-footer {\n        background-color: #007bff !important; /* Blue color */\n        color: #ffffff !important;\n    }\n\n    /* Remove all margins and padding between grid items */\n    .nr-dashboard-theme .nr-dashboard-widget-grid,\n    .nr-dashboard-theme .nr-dashboard-widget {\n        margin: 0 !important;\n        padding: 0 !important;\n    }\n\n    /* Input fields customization */\n    .nr-dashboard-theme md-input-container.md-default-theme .md-input {\n        color: #212529 !important;\n    }\n\n    /* Button customization */\n    .nr-dashboard-theme md-button.md-default-theme {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n        border-radius: 5px;\n        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n    }\n\n    /* Chart background and text customization */\n    .nr-dashboard-theme .nr-dashboard-chart canvas {\n        background-color: #ffffff !important;\n    }\n\n    .nr-dashboard-theme .nr-dashboard-chart .x.axis text,\n    .nr-dashboard-theme .nr-dashboard-chart .y.axis text {\n        fill: #212529 !important;\n    }\n\n    /* Grid and axis customization */\n    .nr-dashboard-theme .nr-dashboard-chart .grid .tick line {\n        stroke: #e9ecef !important;\n    }\n\n    .nr-dashboard-theme .nr-dashboard-chart .axis path,\n    .nr-dashboard-theme .nr-dashboard-chart .axis line {\n        stroke: #212529 !important;\n    }\n\n    /* Chart outer area background */\n    .nr-dashboard-theme .nr-dashboard-chart .chart-outer {\n        background-color: #f8f9fa !important;\n    }\n\n    /* Chart text color */\n    .nr-dashboard-theme .nr-dashboard-chart text {\n        fill: #212529 !important;\n    }\n\n    /* Dashboard group titles */\n    .nr-dashboard-theme .nr-dashboard-group-title {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n        border-radius: 5px;\n        padding: 5px 10px;\n    }\n\n    /* Tooltip customization */\n    .nr-dashboard-theme .nr-dashboard-tooltip {\n        background-color: #007bff !important;\n        color: #ffffff !important;\n    }\n</style>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "added to site",
+        "x": 120,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b3b1bcbc1de0ec8",
         "type": "e-mail",
-        "z": "10c5f92a676b3d97",
-        "server": "smtp.office365.com",
-        "port": "587",
+        "z": "fea15aab4a789ebf",
+        "server": "smtp.gmail.com",
+        "port": "465",
         "authtype": "BASIC",
         "saslformat": true,
         "token": "oauth2Response.access_token",
         "secure": true,
         "tls": true,
-        "name": "kaeseno1@students.zhaw.ch",
-        "dname": "Mail kaeseno1",
-        "x": 760,
-        "y": 120,
+        "name": "livio8047@gmail.com",
+        "dname": "Mail",
+        "x": 1190,
+        "y": 560,
         "wires": []
+    },
+    {
+        "id": "1a3276bfcb5fb685",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "o2 mail function",
+        "func": "if(msg.payload > 19.5) {\n    msg.payload=\"O2 Sensor is \" + msg.payload\n    msg.topic=\"Node Red Alert\"\n    return msg;\n} else {\n    return null\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 680,
+        "wires": [
+            [
+                "4a77ed27e2c3804f",
+                "a9de4ae0c1416e26"
+            ]
+        ]
+    },
+    {
+        "id": "4a77ed27e2c3804f",
+        "type": "debug",
+        "z": "fea15aab4a789ebf",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "a9de4ae0c1416e26",
+        "type": "delay",
+        "z": "fea15aab4a789ebf",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1060,
+        "y": 460,
+        "wires": [
+            [
+                "2b3b1bcbc1de0ec8"
+            ]
+        ]
+    },
+    {
+        "id": "56e985170858b899",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "nh3 mail function",
+        "func": "if (msg.payload > 19.5) {\n    msg.payload = \"NH3 Sensor is \" + msg.payload\n    msg.topic = \"Node Red Alert\"\n    return msg;\n} else {\n    return null\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 160,
+        "wires": [
+            [
+                "a9de4ae0c1416e26"
+            ]
+        ]
+    },
+    {
+        "id": "ee2adb17e4874908",
+        "type": "function",
+        "z": "fea15aab4a789ebf",
+        "name": "co mail function",
+        "func": "if (msg.payload > 80) {\n    msg.payload = \"CO Sensor is \" + msg.payload\n    msg.topic = \"Node Red Alert\"\n    return msg;\n} else {\n    return null\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 320,
+        "wires": [
+            [
+                "a9de4ae0c1416e26"
+            ]
+        ]
+    },
+    {
+        "id": "52da1c7717b7a683",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 1,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "5a25bc4365a9b3b4",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "a97311ca48e08de5",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 3,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "e5dfc724a76617a8",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 5,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "0accdd2a9db29f57",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 6,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "a5912c3f618d095e",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 7,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "7712edb5d2f9f4ad",
+        "type": "ui_spacer",
+        "z": "fea15aab4a789ebf",
+        "name": "spacer",
+        "group": "e267505017fd8305",
+        "order": 8,
+        "width": 6,
+        "height": 1
     },
     {
         "id": "ae56f20f78338ce9",
@@ -95,5 +612,59 @@
         "port": "27017",
         "db": "IoT-Project",
         "name": "mongodb"
+    },
+    {
+        "id": "92b7cf35f1e219e5",
+        "type": "ui_group",
+        "name": "Ammonia (NH3)",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 4,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a7faf3b35ab36b3b",
+        "type": "ui_group",
+        "name": "Carbon Monoxide (CO)",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 2,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0eb95b8c5961010a",
+        "type": "ui_group",
+        "name": "Oxygen (O2)",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 3,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e267505017fd8305",
+        "type": "ui_group",
+        "name": "Welcome to our IoT Project!",
+        "tab": "e20c06f70fcdb8d8",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e20c06f70fcdb8d8",
+        "type": "ui_tab",
+        "name": "IoT - Sensor's Dashboard ",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false,
+        "info": "# Hello and welcome"
     }
 ]
